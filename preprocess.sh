@@ -1,0 +1,1 @@
+python preprocessing.py -i data/Train -o data/Train_processed --a True

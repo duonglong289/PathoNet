@@ -1,10 +1,10 @@
-from keras.callbacks import ModelCheckpoint,Callback,LearningRateScheduler,TensorBoard
-from keras.models import load_model
+from tensorflow.keras.callbacks import ModelCheckpoint,Callback,LearningRateScheduler,TensorBoard
+from tensorflow.keras.models import load_model
 import random
 import numpy as np
 from scipy import misc
 import gc
-from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from imageio import imread
 from datetime import datetime
 import os
@@ -50,7 +50,7 @@ def train(args=None):
                     epochs=conf.epoches,
                     verbose=1,
                     initial_epoch=0,
-                    callbacks = [model_checkpoint, change_lr,tbCallBack]
+                    callbacks = [model_checkpoint, change_lr, tbCallBack]
                     )
 
 if __name__ == "__main__":

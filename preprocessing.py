@@ -3,6 +3,9 @@ import glob
 from scipy import misc
 from utils import dataAugmentation,createGaussianLabel
 import numpy as np
+import os
+import cv2
+from tqdm import tqdm
 
 def get_parser():
     
@@ -35,21 +38,24 @@ def sizes(s):
 def preprocess(args=None):
     parser = get_parser()
     args = parser.parse_args(args)
-    jpgFiles = glob.glob(args.inputPath+'\\'+'*.jpg') 
-    for f in  jpgFiles:
-        image=misc.imread(f)
-        img=misc.imresize(image,args.outputsize)
+    jpgFiles = glob.glob(args.inputPath+'/*.jpg')
+    os.makedirs(args.outputPath, exist_ok=True)
+    for f in  tqdm(jpgFiles):
+        image=cv2.imread(f)
+        img=cv2.resize(image, args.outputsize[:2], cv2.INTER_CUBIC)
         label=createGaussianLabel(f.replace(".jpg",".json"),args.outputsize,image.shape,args.GaussianSize)
         if args.augmentation:
             images,labels=dataAugmentation([img],[label])
             for i in range(len(images)):
-                name=args.outputPath+'\\'+(f.replace(".jpg","").split('\\')[-1])+"_"+str(i)
-                misc.imsave(name+'.jpg',images[i]) 
-                np.save(name+'.npy',labels[i].astype(np.uint8))
+                basename = os.path.basename(f)
+                new_name = os.path.join(args.outputPath, basename).replace(".jpg", ".png")
+                cv2.imwrite(new_name, images[i])
+                np.save(new_name.replace('.png','.npy'), labels[i].astype(np.uint8))
         else:
-            name=args.outputPath+(f.replace(".jpg","").split('\\')[-1])
-            misc.imsave(name+'.jpg',img) 
-            np.save(name+'.npy',label)
+            basename = os.path.basename(f)
+            new_name = os.path.join(args.outputPath, basename).replace(".jpg", ".png")
+            cv2.imwrite(new_name,img) 
+            np.save(new_name.replace('.png','.npy'),label)
 
 if __name__ == "__main__":
    preprocess()

@@ -20,7 +20,7 @@
     "batchSize": 16,
     "epoches": 30,
     "validationSplit": 0.2,
-    "trainDataPath": "data/Train/",
+    "trainDataPath": "data/Train_processed",
     "thresholds": [
         120,
         180,
