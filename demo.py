@@ -10,9 +10,12 @@ import numpy as np
 def get_parser():
     
     parser = argparse.ArgumentParser('demo')
-    parser.add_argument('--inputPath', '-i', required=True)
-    parser.add_argument('--outputPath', '-o', required=True)
-    parser.add_argument('--configPath', '-c', required=True)
+    # parser.add_argument('--inputPath', '-i', required=True)
+    # parser.add_argument('--outputPath', '-o', required=True)
+    # parser.add_argument('--configPath', '-c', required=True)
+    parser.add_argument('--inputPath', '-i', default="SHIDC-B-Ki-67/256x256 cropped images/train256")
+    parser.add_argument('--outputPath', '-o', default="debugs/")
+    parser.add_argument('--configPath', '-c', default="configs/eval_Unet.json")
     return parser
 
 def visualizer(img,points):
@@ -46,7 +49,10 @@ def demo(args=None):
 
     else:
         img=imageio.imread(args.inputPath)
-        imageio.imwrite(args.outputPath+args.inutPath("/")[-1])
+        # img = np.ones((224,224,3), dtype=np.uint8)
+        pred=pipeline.predict(img)
+        output=visualizer(img,pred)
+        # imageio.imwrite(args.outputPath+args.inutPath("/")[-1])
 
 
 

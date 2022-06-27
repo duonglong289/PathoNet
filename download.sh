@@ -1,0 +1,5 @@
+# Download Unet
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1WOVw3vCBZkN9Nk58Il79gcnI7CoSsWfb' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1WOVw3vCBZkN9Nk58Il79gcnI7CoSsWfb" -O Unet.hdf5 && rm -rf /tmp/cookies.txt
+
+# Download PathoNet
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=13M6WpBsY_XtIKev_A6EK_Cj2LuBySM3K' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=13M6WpBsY_XtIKev_A6EK_Cj2LuBySM3K" -O PathoNet.hdf5 && rm -rf /tmp/cookies.txt

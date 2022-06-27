@@ -11,13 +11,14 @@ from scipy import misc
 import matplotlib.pyplot as plt
 from tabulate import tabulate
 from sklearn.metrics import accuracy_score
+from tqdm import tqdm
 
 def read_labels(name,inputShape,imageShape):
     with open(name,'r') as f:
         temp = json.load(f)
         labels=[]
         for d in temp:
-            print(imageShape)
+            # print(imageShape)
             if imageShape[0] ==255 and imageShape[1]==255:
                 x=int(d['x'])
                 y=int(d['y'])
@@ -33,8 +34,11 @@ def read_labels(name,inputShape,imageShape):
 def get_parser():
     
     parser = argparse.ArgumentParser('eval')
-    parser.add_argument('--inputPath', '-i', required=True)
-    parser.add_argument('--configPath', '-c', required=True)
+    # parser.add_argument('--inputPath', '-i', required=True)
+    # parser.add_argument('--configPath', '-c', required=True)
+    parser.add_argument('--inputPath', '-i', default='/root/PathoNet/data/SHIDC-B-Ki-67/256x256 cropped images/test256')
+    # parser.add_argument('--inputPath', '-i', default='/root/PathoNet/data/SHIDC-B-Ki-67/bare images/Test')
+    parser.add_argument('--configPath', '-c', default='/root/PathoNet/configs/eval_PathoNet.json')
     return parser
 
 def metric(pred,label):
@@ -61,7 +65,7 @@ def eval(args=None):
     pipeline=Pipeline(conf) 
     data = [args.inputPath+"/"+f for f in os.listdir(args.inputPath) if '.jpg' in f]
     res=np.zeros((len(data),3,3))
-    for i,d in enumerate(data):
+    for i,d in tqdm(enumerate(data), total=len(data)):
         img=imageio.imread(d)
         labels=read_labels(d.replace(".jpg",".json"),conf.inputShape,img.shape).reshape((-1,3))
         img=misc.imresize(img,conf.inputShape)
@@ -103,7 +107,7 @@ def eval_pts(args=None):
     pred_TIL_pt=[] #collect 23 scores for prediction
     gt_TIL_pt=[] #collect 23 scores for ground truth
 
-    for pt_idx, pt_path in enumerate(grouped_data):
+    for pt_idx, pt_path in tqdm(enumerate(grouped_data), total=len(grouped_data)):
         res=np.zeros((len(grouped_data[pt_idx]),3,3))  #img x classes x TP-FP-FN
         lb=[] #collect all labels for one patient
         for i,d in enumerate(grouped_data[pt_idx]): #Iterate across images for one pt
