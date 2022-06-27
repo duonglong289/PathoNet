@@ -18,7 +18,7 @@ class DataLoader:
             for b in batch:
                 img=imread(b)
                 images.append(img)
-                temp=np.load(b.replace(".jpg",".npy")).astype(int)
+                temp=np.load(b.replace(".png",".npy")).astype(int)
                 np.place(temp,temp==255,self.guaMaxValue)
                 labels.append(temp)
             images=np.array(images)

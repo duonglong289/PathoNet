@@ -13,6 +13,7 @@ import models
 from utils import DataLoader, LrPolicy
 from config import Config
 import argparse
+import glob
 
 def get_parser():
     
@@ -35,7 +36,8 @@ def train(args=None):
     tbCallBack=TensorBoard(log_dir=conf.logPath+"/"+trainString+'/logs', histogram_freq=0,  write_graph=True, write_images=True)
     model=models.modelCreator(conf.model,conf.inputShape,conf.classes,conf.pretrainedModel)
     model.compile(optimizer = conf.optimizer, loss = conf.loss)
-    data = [conf.trainDataPath+"/"+f for f in os.listdir(conf.trainDataPath) if '.jpg' in f]
+    # data = [conf.trainDataPath+"/"+f for f in os.listdir(conf.trainDataPath) if '.png' in f]
+    data = glob.glob(os.path.join(conf.trainDataPath, "*.png"))
     random.shuffle(data)
     thr=int(len(data)*conf.validationSplit)
     trainData=data[thr:]
