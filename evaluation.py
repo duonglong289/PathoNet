@@ -66,9 +66,11 @@ def eval(args=None):
     data = [args.inputPath+"/"+f for f in os.listdir(args.inputPath) if '.jpg' in f]
     res=np.zeros((len(data),3,3))
     for i,d in tqdm(enumerate(data), total=len(data)):
-        img=imageio.imread(d)
+        # img=imageio.imread(d)
+        img = cv2.imread(d)
         labels=read_labels(d.replace(".jpg",".json"),conf.inputShape,img.shape).reshape((-1,3))
-        img=misc.imresize(img,conf.inputShape)
+        # img=misc.imresize(img,conf.inputShape)
+        img = cv2.resize(img,tuple(conf.inputShape[:2]))
         pred=pipeline.predict(img)
         if len(pred!=0):
             for j,ch in enumerate(range(3)):
@@ -107,14 +109,16 @@ def eval_pts(args=None):
     pred_TIL_pt=[] #collect 23 scores for prediction
     gt_TIL_pt=[] #collect 23 scores for ground truth
 
-    for pt_idx, pt_path in tqdm(enumerate(grouped_data), total=len(grouped_data)):
+    for pt_idx, pt_path in enumerate(grouped_data):
         res=np.zeros((len(grouped_data[pt_idx]),3,3))  #img x classes x TP-FP-FN
         lb=[] #collect all labels for one patient
-        for i,d in enumerate(grouped_data[pt_idx]): #Iterate across images for one pt
-            img=imageio.imread(d)
+        for i,d in tqdm(enumerate(grouped_data[pt_idx]), total=len(grouped_data[pt_idx])): #Iterate across images for one pt
+            # img=imageio.imread(d)
+            img = cv2.imread(d)
             labels=read_labels(d.replace(".jpg",".json"),conf.inputShape,conf.imageShape).reshape((-1,3)) #x-y-label
             lb.append(labels)
-            img=misc.imresize(img,conf.inputShape) #resize 256 x 256
+            # img=misc.imresize(img,conf.inputShape) #resize 256 x 256
+            img = cv2.resize(img, tuple(conf.inputShape[:2]))
             pred=pipeline.predict(img) #x-y-label
             if len(pred!=0):
                 for j,ch in enumerate(range(3)):

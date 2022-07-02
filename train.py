@@ -19,6 +19,7 @@ def get_parser():
     
     parser = argparse.ArgumentParser('train')
     parser.add_argument('--configPath', '-c', required=True)
+    parser.add_argument('--num_train', type=int, help='num_train_dataset')
     return parser
 
 def train(args=None):
@@ -28,18 +29,25 @@ def train(args=None):
     conf.load(args.configPath)
     time=datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     trainString="%s_%s_%s_%s" % (conf.model,conf.optimizer,str(conf.lr),time)
-    os.makedirs(conf.logPath+"/"+trainString)
-    conf.save(conf.logPath+"/"+trainString+'/config.json')
+    
+    logPath = f"{conf.logPath}_numTrain_{args.num_train}"
+    
+    os.makedirs(logPath+"/"+trainString)
+    conf.save(logPath+"/"+trainString+'/config.json')
     print('Compiling model...')
-    model_checkpoint = ModelCheckpoint(conf.logPath+"/"+trainString+'/Checkpoint-{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_loss', save_best_only=False, save_weights_only=True)
+
+    model_checkpoint = ModelCheckpoint(logPath+"/"+trainString+'/Checkpoint-{epoch:02d}-{val_loss:.2f}.hdf5', monitor='val_loss', save_best_only=False, save_weights_only=True)
     change_lr = LearningRateScheduler(LrPolicy(conf.lr).stepDecay)
-    tbCallBack=TensorBoard(log_dir=conf.logPath+"/"+trainString+'/logs', histogram_freq=0,  write_graph=True, write_images=True)
+    tbCallBack=TensorBoard(log_dir=logPath+"/"+trainString+'/logs', histogram_freq=0,  write_graph=True, write_images=True)
     model=models.modelCreator(conf.model,conf.inputShape,conf.classes,conf.pretrainedModel)
     model.compile(optimizer = conf.optimizer, loss = conf.loss)
     # data = [conf.trainDataPath+"/"+f for f in os.listdir(conf.trainDataPath) if '.png' in f]
     data = glob.glob(os.path.join(conf.trainDataPath, "*.png"))
+    random.seed(1)
     random.shuffle(data)
-    thr=int(len(data)*conf.validationSplit)
+    # thr=int(len(data)*conf.validationSplit)
+    thr = int(args.num_train)
+
     trainData=data[thr:]
     valData=data[:thr]
     trainDataLoader=DataLoader(conf.batchSize,conf.inputShape,trainData,conf.guaMaxValue)

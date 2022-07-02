@@ -284,7 +284,7 @@ def FCRN_A(input_dim, classes=3, pretrained_weights = None):
 
     model = Model (inputs = input_, outputs = density_pred)
 
-    model.summary()
+    # model.summary()()
 
     if(pretrained_weights):
         model.load_weights(pretrained_weights)
@@ -319,7 +319,7 @@ def FCRN_B(input_dim, classes=3, pretrained_weights = None):
     density_pred =  Conv2D(classes, 1, 1, bias = False, activation='linear',init='orthogonal',name='pred',border_mode='same')(act7)
     model = Model (input = input_, output = density_pred)
 
-    model.summary()
+    # model.summary()()
 
     if(pretrained_weights):
         model.load_weights(pretrained_weights)
@@ -375,7 +375,7 @@ def PathoNet(input_size = (256,256,3), classes=3, pretrained_weights = None):
     model = Model(inputs = inputs, outputs = conv10)
 
     
-    model.summary()
+    # model.summary()()
 
     if(pretrained_weights):
         model.load_weights(pretrained_weights)
@@ -445,9 +445,9 @@ def Unet(input_size,classes=3,pretrained_weights = None):
     btn9 = BatchNormalization()(conv9)
     conv10 = Conv2D(classes, 1, activation = 'linear')(btn9)
 
-    model = Model(input = inputs, output = conv10)
+    model = Model(inputs = inputs, outputs = conv10)
     
-    model.summary()
+    # model.summary()()
 
     if(pretrained_weights):
     	model.load_weights(pretrained_weights)
@@ -723,13 +723,13 @@ def modelCreator(modelName,inputShape,classes,weights=None):
     elif modelName=="Deeplab_xception":
         model=Deeplabv3(weights=None, input_shape=inputShape, classes=classes, backbone='xception',
               OS=16, alpha=1., activation=None)
-        model.summary()
+        # model.summary()()
         if weights!= None:
             model.load_weights(weights)
     elif modelName=="Deeplab_mobilenet":
         model=Deeplabv3(weights=None, input_shape=inputShape, classes=classes, backbone='mobilenetv2',
               OS=16, alpha=1., activation=None)
-        model.summary()
+        # model.summary()()
         if weights!= None:
             model.load_weights(weights)
     else:

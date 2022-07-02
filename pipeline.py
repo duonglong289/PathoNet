@@ -1,7 +1,8 @@
 import numpy as np
 from scipy import ndimage
 from skimage.feature import peak_local_max
-from skimage.morphology import watershed as ws
+# from skimage.morphology import watershed as ws
+from skimage.segmentation import watershed as ws
 import cv2
 import models
 from  config import Config

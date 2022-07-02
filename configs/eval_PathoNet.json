@@ -9,7 +9,7 @@
         256,
         3
     ],
-    "pretrainedModel": "pretrainedModels/PathoNet.hdf5",
+    "pretrainedModel": "logs/log_numTrain_1500/PathoNet_adam_0.01_2022-07-02_09-44-28/Checkpoint-28-187.21.hdf5",
     "classes": 3,
     "model": "PathoNet",
     "logPath": "logs/",
@@ -20,7 +20,7 @@
     "batchSize": 16,
     "epoches": 30,
     "validationSplit": 0.2,
-    "trainDataPath": "data/Train/",
+    "trainDataPath": "data/Train_processed/",
     "thresholds": [
         60,
         60,
